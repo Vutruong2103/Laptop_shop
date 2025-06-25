@@ -52,7 +52,7 @@ const Navbar = () => {
         </nav>
 
         {/* Search Bar */}
-        <div className="hidden md:flex items-center relative w-1/3">
+        <div className="h idden md:flex items-center relative w-1/3">
           <input
             type="text"
             placeholder="Tìm kiếm laptop..."
