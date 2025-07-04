@@ -19,10 +19,10 @@ const HotProducts = () => {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-        {dataHotProducts.map(
+        {dataHotProducts.map(//.map() giúp lặp và tạo nhiều ProductCard cho từng ptu,item từng sản phẩm trong dataHotProducts
           (
             item: IHotProduct,
-            index: number //.map() giúp lặp và tạo nhiều ProductCard cho từng ptu,item từng sản phẩm trong dataHotProducts
+            index: number 
           ) => (
             <ProductCard key={index} item={item} isHot={true} /> //item={item} là truyền dữ liệu từng sản phẩm vào khuôn ProductCard để hiển thị
           )
