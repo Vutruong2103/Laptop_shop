@@ -12,7 +12,7 @@ import {
 } from "./products.interface";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
-import { products } from "../../components/home-type-products/fakeData";
+import { newestProducts, products } from "../../components/home-type-products/fakeData";
 
 const items = [
   {
@@ -26,17 +26,30 @@ const items = [
 
 const Products = () => {
   const [categorySelected, setCategorySelected] = useState("");
+  const [priceSorting, setPriceSorting] = useState("newest")
   const [productData, setProductData] = useState(products);
+  
+  const filterProductsByBrands = (products: IProduct[], brands: string[]) => {
+    //lấy brands 
+    return products.filter((product) => brands.includes(product.brand));
+  };
 
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
     console.log("checked = ", checkedValues);
+    const newListProducts = filterProductsByBrands(
+      products,
+      checkedValues as string[]
+    );
+    // console.log("newListProducts: ", newListProducts);
+    setProductData(newListProducts);
   };
+
 
   const handleFilterCategory = (val: string) => {
     setCategorySelected(val);
-    if (val === "") {
+    if (val === "") {// !val = val === ""
       setProductData(products);
     } else {
       const newProductsByBrand = products.filter((x) => x.category === val);
@@ -44,6 +57,19 @@ const Products = () => {
     }
   };
 
+  const handlePriceSorting = (val: string) => {
+    setPriceSorting(val);
+    if (val === 'price-asc'){
+      const newListProducts = productData.sort((a, b) => a.price - b.price)
+      setProductData(newListProducts)
+    }else if (val === 'price-desc'){
+      const newListProducts = productData.sort((a, b) => b.price - a.price)
+      setProductData(newListProducts)
+    }else if (val === 'newest'){
+      const newListProducts = newestProducts.filter((x) => x.category === categorySelected);
+      setProductData(newListProducts)
+    }
+  }
   // const [hihi, setHihi] = useState<string[]>([]);
 
   // const onSetHihi = (value: string) => {
@@ -201,6 +227,8 @@ const Products = () => {
                 optionFilterProp="label"
                 className="w-[160px]"
                 options={sorting}
+                onChange={(val) => handlePriceSorting(val)}
+                value={priceSorting}
               />
             </div>
           </div>

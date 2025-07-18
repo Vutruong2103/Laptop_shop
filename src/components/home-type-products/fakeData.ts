@@ -276,3 +276,281 @@ export const products = [
     category: "student",
   },
 ];
+export const newestProducts = [
+  // GAMING
+  {
+    name: "MSI Gaming GE76 Raider",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/249149/msi-gaming-ge76-raider-11uh-i9-434vn-2-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  {
+    name: "MSI Gaming Stealth 14 AI Studio A1VFG Ultra 7 155H (085VN)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/335113/msi-stealth-18-hx-ai-a2xwig-ultra-9-017vn-2-638763361107598950-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  {
+    name: "Lenovo Gaming LOQ 15IAX9 i5 12450HX (83GS000JVN)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/335553/lenovo-loq-15irx9-i5-83dv00psvn-new-2-638839541441235587-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  {
+    name: "HP OMEN Transcend 14 fb0135TX Ultra 7 155H",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/332274/hp-omen-14-fb0135tx-ultra-7-ay8v1pa-2-638683224737980243-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  // OFFICE
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  {
+    name: "Acer Aspire 16 AI A16 71M 71U7 Ultra 7 155H (NX.J4YSV.002)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/333425/acer-aspire-16-ai-a16-71m-71u7-ultra-7-nxj4ysv002-2-638754915930943532-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  {
+    name: "Lenovo ThinkBook 16 G7 Ultra 7 155U (21MS007HVN)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/332370/lenovo-thinkbook-16-g7-ultra-7-21ms007hvn-1-638679569535365681-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  {
+    name: "Laptop Dell XPS 13 9340 Ultra 7 155H/16GB/1TB/OfficeHS/Win11 (HXRGT)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/327907/dell-xps-13-9340-ultra-7-hxrgt-glr-2-638666763332971850-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  // DESIGN
+  {
+    name: "Acer Swift Go 14 AI SFG14 73 71ZX Ultra 7 155H",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/332397/acer-swift-ai-sf14-51-53p9-ultra-5-nxj2ksv002-2-638753846804935555-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  {
+    name: "Dell Latitude 5350 Ultra 7 165U (L5350-165U-16512W)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/335180/dell-latitude-5450-ultra-5-l5450125u16512w-2-638769451450676687-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  {
+    name: "Lenovo ThinkBook 16 Ultra 7 255H (21SK006YVN)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/333098/asus-vivobook-s-14-s5406sa-ultra-5-pp060ws-2-638792867671707552-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  {
+    name: "Asus Vivobook 16 A1607CA Ultra 5 225H (MB038WS)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/335172/asus-vivobook-s-16-m5606ka-r7-ai-350-ri016ws-1-638769443877526313-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  // STUDENT
+  {
+    name: "Asus Vivobook 16 M1607KA R7 AI 350 (MB091WS)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/335171/asus-vivobook-16-a1607ca-ultra-5-mb038ws-2-638766863315811807-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+  {
+    name: "Asus Vivobook S 15 S5507QA X1E 78 100 (MA090WS)",
+    image:
+      "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/44/331749/asus-s5507qa-x1e-78-100-ma090ws-2-638666582724697788-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+  {
+    name: "Asus Vivobook S 16 M5606KA R7 AI 350 (RI016WS)",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/325479/asus-vivobook-s-16-oled-s5606ma-ultra-5-mx050w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+];
