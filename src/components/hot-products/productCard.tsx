@@ -1,18 +1,24 @@
 import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { IHotProduct } from "./hotProduct.interface";
+import { useNavigate } from "react-router-dom";
+import { IProduct } from "../home-type-products/homeTypeProducts.interface";
 
 interface Props {
-  item: IHotProduct; //required prop, bat buoc truyen
+  item: IHotProduct | IProduct; //required prop, bat buoc truyen
   isHot?: boolean; // optional prop, có thể có hoặc không
 }
 
 const ProductCard = (props: Props) => {
   const { item, isHot } = props;
+  const navigate = useNavigate();
   return (
-    <div className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer">
+    <div
+      onClick={() => navigate(`/product-detail/${item?.id}`)}
+      className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer"
+    >
       <div className="relative">
-        <img className="rounded-xl" src={item.image} alt="" />
+        <img className="rounded-t-xl" src={item.image} alt="" />
         {isHot && (
           <div className="absolute top-3 left-3 bg-red-500 rounded text-white px-2 py-1 text-xs font-bold">
             Giảm {item.discount}%
@@ -42,8 +48,8 @@ const ProductCard = (props: Props) => {
               <ShoppingCartOutlined className="text-white" />
             </div>
           ) : (
-            <div>
-              <div className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap">Thêm Giỏ Hàng</div>
+            <div className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap">
+              Thêm giỏ hàng
             </div>
           )}
         </div>
