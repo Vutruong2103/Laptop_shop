@@ -3,6 +3,7 @@ import Home from "../pages/home";
 import Contact from "../pages/contact";
 import Layout from "../layout";
 import Product from "../pages/products";
+import ProductDetail from "../pages/detail";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,11 @@ export const router = createBrowserRouter([
       {
         path: "/product",
         element: <Product/>
-      }
+      },
+      {
+        path: "/product-detail/:productId",
+        element: <ProductDetail />
+      },
     ],
   },
 ]);
