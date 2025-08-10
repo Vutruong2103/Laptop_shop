@@ -1,8 +1,23 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/imgs/logo.png";
+import { useStore } from "../store";
 
 const Navbar = () => {
+  const {count} = useStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [navSelected, setNavSelected] = useState('/');
+
+  // console.log('hihi 121212: ', window.location);
+  // const newPathName = window.location.pathname;
+  // console.log('newPathName: ', newPathName);
+
+  useEffect(() => {
+    // UPDATING => CHAY KHI CO SU THAY DOI O DEPENDENCIES
+    // console.log('thay doi ne');
+    setNavSelected(location.pathname)
+  }, [location]) // dependencies
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -21,13 +36,13 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-6">
           <NavLink
             to="/"
-            className="font-medium text-blue-600 cursor-pointer whitespace-nowrap"
+            className={`font-medium ${navSelected === '/' ? 'text-blue-600' : 'text-gray-700'} hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
           >
             Trang chủ
           </NavLink>
           <NavLink
             to="/product"
-            className="font-medium text-gray-700 hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+            className={`font-medium ${(navSelected === '/products' || navSelected.includes('product-detail')) ? 'text-blue-600' : 'text-gray-700'} hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
           >
             Sản phẩm
           </NavLink>
@@ -45,7 +60,7 @@ const Navbar = () => {
           </NavLink>
           <NavLink
             to="/contact"
-            className="font-medium text-gray-700 hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+            className={`font-medium ${navSelected === '/contact' ? 'text-blue-600' : 'text-gray-700'} hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
           >
             Liên hệ
           </NavLink>
@@ -67,15 +82,15 @@ const Navbar = () => {
 
         {/* User Actions */}
         <div className="flex items-center space-x-5">
-          <button className="text-gray-700 hover:text-blue-600 relative cursor-pointer !rounded-button whitespace-nowrap">
+          <button onClick={() => navigate("/cart")} className="text-gray-700 hover:text-blue-600 relative cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-shopping-cart text-xl"></i>
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              3
+              {count}
             </span>
           </button>
           <button className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-user text-xl"></i>
-          </button>
+          </button> 
           <button className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
             Đăng nhập
           </button>

@@ -35,7 +35,7 @@ gpu: string;
 }
 
 export interface IProduct {
-  id: number;
+id: number;
 name: string;
 image: string;
 discount: number;
@@ -50,4 +50,5 @@ isHot: boolean;
 // },
 specs: ISpec;
 brand: string;
-category: string;}
+category: string;
+quantity?: number;}
