@@ -5,6 +5,8 @@ import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { products } from "../products/fakeData";
+import { useStore } from "../../components/store";
+
 
 const productImages = [
   "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
@@ -19,6 +21,7 @@ const items = [
     title: <HomeOutlined />,
   },
   {
+    href: "/products",
     title: "Sản phẩm",
   },
   {
@@ -41,6 +44,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const [indexImg, setIndexImg] = useState<number>(0);
 
+  const { inc } = useStore();
   useEffect(() => {
     // console.log('se chay khi co su thay doi cua productId');
     window.scroll({ top: 0, behavior: "smooth" });
@@ -61,7 +65,6 @@ const ProductDetail = () => {
   // }, []) // [] dependencies
 
   return (
-    //onClick={() => navigator(`/product-detail${items.id}`)}
     <div className="max-w-7xl mx-auto min-h-screen bg-white">
       {/* Breadcrumb */}
       <Breadcrumb items={items} className="mt-6" />
@@ -105,13 +108,13 @@ const ProductDetail = () => {
             <div className="space-y-2">
               <div className="flex items-center space-x-4">
                 <span className="text-3xl font-bold text-blue-600">
-                  22.990.000₫
+                  {productInfo?.price}
                 </span>
                 <span className="text-xl text-gray-500 line-through">
-                  25.990.000₫
+                  {productInfo?.oldPrice}
                 </span>
                 <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
-                  -12%
+                  {productInfo?.discount}% Giảm
                 </span>
               </div>
               <p className="text-sm text-gray-600">Đã bao gồm VAT</p>
@@ -119,11 +122,11 @@ const ProductDetail = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button onClick={inc} className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
                 <i className="fas fa-shopping-cart mr-2"></i>
                 Thêm vào giỏ hàng
               </button>
-              <button onClick={() => navigate(`/payment/${productId}`)} className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button onClick={() => navigate(`/payment/${productId}`)} className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">  
                 Mua ngay
               </button>
             </div>
