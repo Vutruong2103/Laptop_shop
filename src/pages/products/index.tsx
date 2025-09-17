@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HomeOutlined } from "@ant-design/icons";
+import { Pagination } from "antd";
 import { Breadcrumb, Checkbox, GetProp, Select } from "antd";
 import {
   brands,
@@ -13,6 +14,7 @@ import {
 import { products, newestProducts } from "./fakeData";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
+import { ClipLoader } from "react-spinners";
 
 const items = [
   {
@@ -24,39 +26,45 @@ const items = [
   },
 ];
 
-const Products = () => {
-  const [categorySelected, setCategorySelected] = useState("");
-  const [priceSorting, setPriceSorting] = useState("newest");
-  const [productData, setProductData] = useState(products);
+/*
+priceSorting: trạng thái sắp xếp (newest, price-asc, price-desc).
+productData: mảng sản phẩm lấy từ API.
+isLoading: hiển thị trạng thái loading.
+categorySelected, brandSelected, ramSelected, storageSelected: giá trị lọc hiện tại
+pagination: lưu số trang hiện tại và tổng số sản phẩm.
+*/
 
+const Products = () => {
+  const [priceSorting, setPriceSorting] = useState("newest");
+  const [productData, setProductData] = useState<IProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [categorySelected, setCategorySelected] = useState("");
+  const [brandSelected, setBrandSelected] = useState("");
+  const [ramSelected, setRamSelected] = useState("");
+  const [storageSelected, setStorageSelected] = useState("");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    total: 0,
+  });
+
+  //Khi chọn nhiều brand, nối chúng thành chuỗi brand1,brand2,... và gọi API để lấy lại sản phẩm.
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
-    console.log("checked = ", checkedValues);
-    const newListProducts = filterProductsByBrands(
-      products,
-      checkedValues as string[]
-    );
-    // console.log("newListProducts: ", newListProducts);
-    setProductData(newListProducts);
+    const brandJoined = (checkedValues as string[]).join(",");
+    setBrandSelected(brandJoined);
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
   };
 
-  const filterProductsByBrands = (products: IProduct[], brands: string[]) => {
-    return products.filter((product) => brands.includes(product.brand));
-  };
-
-  const handleFilterCategory = (val: string) => {
+  //Chọn 1 category, cập nhật state rồi fetch dữ liệu mới.
+  const handleFilterCategory = async (val: string) => {
     setCategorySelected(val);
-    // categorySelected
-    if (!val) {
-      // !val bang voi val === ""
-      setProductData(newestProducts);
-    } else {
-      const newProductsByBrand = products.filter((x) => x.category === val);
-      setProductData(newProductsByBrand);
-    }
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
   };
 
+  //Sắp xếp theo giá / ngày tạo
   const handlePriceSorting = (val: string) => {
     setPriceSorting(val);
     if (val === "price-asc") {
@@ -66,38 +74,73 @@ const Products = () => {
       const newListProducts = productData.sort((a, b) => b.price - a.price);
       setProductData(newListProducts);
     } else if (val === "newest") {
-      const newListProducts = newestProducts.filter(
-        (x) => x.category === categorySelected
+      const newListProducts = productData.sort(
+        (a: any, b: any) => b.createdAt - a.createdAt
       );
-      setProductData(newListProducts);
+      setProductData(newListProducts as any);
     }
   };
 
-  // const [hihi, setHihi] = useState<string[]>([]);
+  const convertDateStringToTimestamp = (date: string) => {
+    const converted = Date.parse(date);
+    // console.log("converted: ", converted);
+    return converted;
+  };
 
-  // const onSetHihi = (value: string) => {
-  //   console.log("value selected = ", value);
-  //   console.log("hihi chưa cập nhật: ", hihi);
-  //   let checkedValues = [] as string[]
+  const getProducts = async () => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10`;
+    handleFilterProducts(url);
+  };
 
-  //   const isExistedVal = hihi.find((item) => item === value); // giá trị này dùng để kiểm tra xem value vừa chọn đã tồn tại trong mảng hihi hay chưa
-  //   if (isExistedVal) {
-  //     // nếu đã tồn tại rồi
-  //     console.log("co VALUE");
-  //     const newVal = hihi.filter((item) => item !== value); // filter - lọc những giá trị ko phải là value vừa được chọn
-  //     setHihi(newVal); // cập nhật lại list hihi
-  //     console.log("hihi đã cập nhật với ĐK 1: ", newVal);
-  //     // console.log("vinh ne: ", hihi);
-  //     checkedValues = newVal;
-  //   } else {
-  //     console.log("ko co VALUE");
-  //     setHihi(hihi.concat(value)); // lưu trực tiếp vào hihi => DÙNG CONCAT ĐỂ NỐI MẢNG CŨ VỚI GIÁ TRỊ VỪA CHỌN
-  //     console.log("hihi đã cập nhật với ĐK 2: ", hihi.concat(value));
-  //     // console.log("dat ne: ", hihi);
-  //     checkedValues = hihi.concat(value)
-  //   }
-  //   return checkedValues
-  // };
+  //Hàm fetch dữ liệu từ API với URL truyền vào, mọi filter đều build URL rồi gọi nó để fetch dữ liệu
+  const handleFilterProducts = async (url: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setPagination({
+        page: result.pagination.page,
+        total: result.pagination.total,
+      });
+      setIsLoading(false);
+      setProductData(result.data);
+      console.log(result);
+    } catch (error: any) {
+      console.error(error.message);
+      setIsLoading(false);
+    }
+  };
+
+  //lọc page theo ram
+  const handleChaneRam = (val: string) => {
+    console.log("val selected RAM: ", val);
+    setRamSelected(val);
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${val}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
+  };
+
+  //lọc page theo storage
+  const handleChangeStorage = (val: string) => {
+    console.log("val selected STORAGE: ", val);
+    setStorageSelected(val);
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${val}`;
+    handleFilterProducts(url);
+  };
+
+  //xử lý phân trang
+  const handlePagination = (pageSlected: number) => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pageSlected}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
+  };
+
+  //call API lần đầu khi component load
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <div className="mt-4 max-w-7xl mx-auto">
@@ -186,8 +229,9 @@ const Products = () => {
                     optionFilterProp="label"
                     // onChange={onChange}
                     // onSearch={onSearch}
+                    onChange={handleChaneRam}
                     options={ram}
-                    value={ram[0].value}
+                    value={ramSelected}
                     className="w-full"
                   />
                 </div>
@@ -214,8 +258,9 @@ const Products = () => {
                     optionFilterProp="label"
                     // onChange={onChange}
                     // onSearch={onSearch}
+                    onChange={handleChangeStorage}
                     options={storage}
-                    value={storage[0].value}
+                    value={storageSelected}
                     className="w-full"
                   />
                 </div>
@@ -247,9 +292,30 @@ const Products = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-            {productData.map((product: IProduct, index: number) => (
-              <ProductCard item={product} key={index} />
-            ))}
+            {isLoading ? (
+              <div className="col-span-full flex mx-auto justify-center mt-20">
+                <ClipLoader
+                  color={"#2563eb"}
+                  loading={isLoading}
+                  // cssOverride={override}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              productData.map((product: IProduct, index: number) => (
+                <ProductCard item={product} key={index} />
+              ))
+            )}
+          </div>
+          <div className="py-8">
+            <Pagination
+              align="center"
+              defaultCurrent={pagination.page}
+              total={pagination.total}
+              onChange={handlePagination}// khi bấm vào trang số mấy thì nó sẽ gọi hàm handlePagination
+            />
           </div>
         </div>
       </div>
