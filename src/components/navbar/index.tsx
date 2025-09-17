@@ -88,10 +88,10 @@ const Navbar = () => {
               {count}
             </span>
           </button>
-          <button className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">
+          <button onClick={() => navigate("/profile")} className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-user text-xl"></i>
           </button> 
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
+          <button onClick={() => navigate("/login")} className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
             Đăng nhập
           </button>
         </div>
