@@ -35,7 +35,7 @@ gpu: string;
 }
 
 export interface IProduct {
-id: number;
+_id: number;
 name: string;
 image?: string;
 thumbnail?: string;
@@ -53,4 +53,6 @@ specs: ISpec;
 brand: string;
 category: string;
 quantity?: number;
-createdAt?: string;}
+createdAt?: string;
+images?: string[];
+}

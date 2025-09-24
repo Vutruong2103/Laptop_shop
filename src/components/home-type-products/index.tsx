@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { products } from "./fakeData";
 import ProductCard from "../hot-products/productCard";
 import { dataOptions, IProduct, IOption } from "./homeTypeProducts.interface";
@@ -14,11 +14,55 @@ const HomeTypeProducts = () => {
     products.filter((x) => x.category === optionSelected.value)
   );
 
-  console.log("data: ", data);
+  const [productData, setProductData] = useState<IProduct[]>([]);
+  const [productDataOriginal, setProductDataOriginal] = useState<IProduct[]>(
+    []
+  );
+
+  console.log("optionSelected value: ", optionSelected.value);
+
+  const getProductsByCategory = async (categorySelected: string) => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}`;
+    handleFilterProducts(url);
+  }; // CACH 1
+
+  const handleFilterProducts = async (url: string) => {
+    try {
+      const respone = await fetch(url, { method: "GET" });
+      if (respone.ok) {
+        throw new Error(`Repone status: ${respone.status}`);
+      }
+      const result = await respone.json();
+      console.log("result: ", result);
+
+      setProductDataOriginal(result.data);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
+  const getProductsByCategory2 = async () => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100`;
+    handleFilterProducts(url); // CACH 2
+  };
+
+  useEffect(() => {
+    getProductsByCategory2();
+  }, []); // CACH 2
+
+  useEffect(() => {
+    console.log("productDataOriginal: ", productDataOriginal);
+    console.log("su thay doi optionSelected: ", optionSelected);
+
+    const filterProducts = productDataOriginal.filter(
+      (item) => item.category === optionSelected.value
+    );
+    setProductData(filterProducts.slice(0, 4)); // LẤY 4 SẢN PHẨM ĐẦU TIÊN
+  }, [optionSelected, productDataOriginal]); // CACH 2 => NÓ SẼ LẮNG NGHE SỰ THAY ĐỔI CỦA 1 TRONG 2 GIÁ TRỊ NÀY ĐỂ FILTER PRODUCTS
 
   // có 2 cách để lọc dữ liệu
   // cách 1: filter/lọc trực tiếp ở mapping products
-  // cách 2: tạo 1 state data chỉ chứa những product cần filter/lọc
+  // cách 2: tạo 1 state data chỉ chứa những product cần filter/lọc\
 
   return (
     <div>
@@ -30,7 +74,9 @@ const HomeTypeProducts = () => {
               key={item.id}
               onClick={() => {
                 setOptionSelected(item);
-                setData(products.filter((x) => x.category === item.value));
+                // setData(products.filter((x) => x.category === item.value));
+                // getProductsByCategory2();
+                getProductsByCategory(item.value);
               }}
               className={`px-4 py-3 text-md font-semibold rounded-full cursor-pointer ${
                 optionSelected.id === item.id
@@ -44,14 +90,12 @@ const HomeTypeProducts = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 my-8">
-        {/* {products
-          .filter((x) => x.category === optionSelected.value)
-          .map((item: IProduct, index: number) => (
-            <ProductCard key={index} item={item} />
-          ))} */}
-        {data.map((item: IProduct, index: number) => (
+        {productData.map((item: IProduct, index: number) => (
           <ProductCard key={index} item={item} />
         ))}
+        {/* {data.map((item: IProduct, index: number) => (
+          <ProductCard key={index} item={item} />
+        ))} */}
       </div>
       <div
         onClick={() => {
