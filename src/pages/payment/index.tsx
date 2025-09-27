@@ -36,7 +36,7 @@ const Payment = () => {
   const { productId } = useParams();
 
   console.log("Product ID:", productId);
-  const productPayment = products.find((item) => item.id == productId as any)
+  const productPayment = products.find((item) => item._id == productId as any)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target; //e.target là element mà người dùng đang thao tác
     setFormData((prev) => ({

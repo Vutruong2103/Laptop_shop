@@ -53,14 +53,16 @@ const Products = () => {
   ) => {
     const brandJoined = (checkedValues as string[]).join(",");
     setBrandSelected(brandJoined);
-    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    //const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
     handleFilterProducts(url);
   };
 
   //Chọn 1 category, cập nhật state rồi fetch dữ liệu mới.
   const handleFilterCategory = async (val: string) => {
     setCategorySelected(val);
-    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    //const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
     handleFilterProducts(url);
   };
 
@@ -314,7 +316,7 @@ const Products = () => {
               align="center"
               defaultCurrent={pagination.page}
               total={pagination.total}
-              onChange={handlePagination}// khi bấm vào trang số mấy thì nó sẽ gọi hàm handlePagination
+              onChange={(pageNumber) =>handlePagination(pageNumber)} // khi bấm vào trang số mấy thì nó sẽ gọi hàm handlePagination
             />
           </div>
         </div>

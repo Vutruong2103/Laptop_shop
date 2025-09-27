@@ -1,9 +1,33 @@
+import { Input } from "antd";
+import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = () => {};
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const loginUrl = "https://lapshop-be.onrender.com/api/auth/login";
+    await axios
+      .post(loginUrl, {
+        // username: username,
+        // password: password
+        username,
+        password,
+      })
+      .then(function (response) {
+        console.log("thanh cong", response.data);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        navigate("/");
+      })
+      .catch(function (error) {
+        console.log("that bai");
+      });
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="w-full max-w-md p-8 rounded-2xl shadow-md border">
@@ -11,24 +35,20 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block mb-1 text-gray-600">Email</label>
-            <input
-              type="email"
+            <Input
+              placeholder="Tên đăng nhập hoặc email"
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-400"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div>
             <label className="block mb-1 text-gray-600">Password</label>
-            <input
-              type="password"
+            <Input.Password
+              placeholder="Mật khẩu"
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-400"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
             />
           </div>
           <button

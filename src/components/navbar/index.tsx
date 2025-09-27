@@ -13,6 +13,10 @@ const Navbar = () => {
   // const newPathName = window.location.pathname;
   // console.log('newPathName: ', newPathName);
 
+  //localStorage.getItem("user") => no la string
+  const userInfo = JSON.parse(localStorage.getItem("user") as string); //chuyen doi tuong json thanh object
+  console.log("userIfo: ", userInfo);
+
   useEffect(() => {
     // UPDATING => CHAY KHI CO SU THAY DOI O DEPENDENCIES
     // console.log('thay doi ne');
@@ -82,6 +86,8 @@ const Navbar = () => {
 
         {/* User Actions */}
         <div className="flex items-center space-x-5">
+          {userInfo ? (
+            <div className="flex gap-4">
           <button onClick={() => navigate("/cart")} className="text-gray-700 hover:text-blue-600 relative cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-shopping-cart text-xl"></i>
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -91,9 +97,13 @@ const Navbar = () => {
           <button onClick={() => navigate("/profile")} className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-user text-xl"></i>
           </button> 
-          <button onClick={() => navigate("/login")} className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
+          </div>
+          ) : (
+          <button
+          onClick={() => navigate("/login")} className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
             Đăng nhập
           </button>
+        )}
         </div>
       </div>
     </header>
