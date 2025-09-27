@@ -27,9 +27,13 @@ const HomeTypeProducts = () => {
   }; // CACH 1
 
   const handleFilterProducts = async (url: string) => {
+    console.log("url in handleFilterProducts: ", url);
+    
     try {
       const respone = await fetch(url, { method: "GET" });
-      if (respone.ok) {
+      console.log("respone: ", respone);
+      
+      if (!respone.ok) {
         throw new Error(`Repone status: ${respone.status}`);
       }
       const result = await respone.json();
@@ -44,10 +48,14 @@ const HomeTypeProducts = () => {
   const getProductsByCategory2 = async () => {
     const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100`;
     handleFilterProducts(url); // CACH 2
+    console.log("url: ", url);
+    
   };
 
   useEffect(() => {
     getProductsByCategory2();
+    console.log("call api get all products");
+    
   }, []); // CACH 2
 
   useEffect(() => {
@@ -57,9 +65,12 @@ const HomeTypeProducts = () => {
     const filterProducts = productDataOriginal.filter(
       (item) => item.category === optionSelected.value
     );
+  console.log("filterProducts: ", filterProducts);
+  
     setProductData(filterProducts.slice(0, 4)); // LẤY 4 SẢN PHẨM ĐẦU TIÊN
   }, [optionSelected, productDataOriginal]); // CACH 2 => NÓ SẼ LẮNG NGHE SỰ THAY ĐỔI CỦA 1 TRONG 2 GIÁ TRỊ NÀY ĐỂ FILTER PRODUCTS
 
+  
   // có 2 cách để lọc dữ liệu
   // cách 1: filter/lọc trực tiếp ở mapping products
   // cách 2: tạo 1 state data chỉ chứa những product cần filter/lọc\
@@ -76,7 +87,7 @@ const HomeTypeProducts = () => {
                 setOptionSelected(item);
                 // setData(products.filter((x) => x.category === item.value));
                 // getProductsByCategory2();
-                getProductsByCategory(item.value);
+                // getProductsByCategory(item.value);
               }}
               className={`px-4 py-3 text-md font-semibold rounded-full cursor-pointer ${
                 optionSelected.id === item.id
