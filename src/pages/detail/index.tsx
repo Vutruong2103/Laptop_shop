@@ -7,6 +7,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { products } from "../products/fakeData";
 import { useStore } from "../../components/store";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
+import { useUserCart } from "../../store/useUserCart";
+
 
 const productImages = [
   "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
@@ -45,7 +47,7 @@ const ProductDetail = () => {
   const [productDetail, setProductDetail] = useState<IProduct>();
   const [listImages, setListImages] = useState<string[]>([]);
 
-  const { inc } = useStore();
+  const { setQuantityCart } = useUserCart()
   useEffect(() => {
     // console.log('se chay khi co su thay doi cua productId');
     window.scroll({ top: 0, behavior: "smooth" });
@@ -147,8 +149,13 @@ const ProductDetail = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
+              {/* <button onClick={() => {
+                useInfo && handleAddProductToCart()
+              }} className={`w-full ${useInfo ? "bg-red-600 hover:bg-red-700 cursor-pointer" : "bg-gray-600 cursor-not-allowed"} text-white py-3 px-6 rounded-lg font-medium transition-colors !rounded-button whitespace-nowrap`}>
+                <i className="fas fa-shopping-cart mr-2"></i>
+                Thêm vào giỏ hàng
+              </button> */}
               <button
-                onClick={inc}
                 className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
               >
                 <i className="fas fa-shopping-cart mr-2"></i>

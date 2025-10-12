@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/imgs/logo.png";
 import { useStore } from "../store";
+import { useUserCart } from "../../store/useUserCart";
 
 const Navbar = () => {
   const {count} = useStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [navSelected, setNavSelected] = useState('/');
+  const { countQuantityCart } = useUserCart();
 
   // console.log('hihi 121212: ', window.location);
   // const newPathName = window.location.pathname;
@@ -91,7 +93,7 @@ const Navbar = () => {
           <button onClick={() => navigate("/cart")} className="text-gray-700 hover:text-blue-600 relative cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-shopping-cart text-xl"></i>
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {count}
+              {countQuantityCart}
             </span>
           </button>
           <button onClick={() => navigate("/profile")} className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">

@@ -2,11 +2,14 @@ import { Input } from "antd";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useUserInfo } from "../../store/useUserInfo";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setUserInfo } = useUserInfo();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -22,7 +25,18 @@ const Login = () => {
         console.log("thanh cong", response.data);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUserInfo(response.data.user);
         navigate("/");
+        toast.success("Đăng nhập thành công!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       })
       .catch(function (error) {
         console.log("that bai");
