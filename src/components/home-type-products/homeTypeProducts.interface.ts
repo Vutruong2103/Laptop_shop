@@ -37,7 +37,6 @@ gpu: string;
 export interface IProduct {
 _id: number;
 name: string;
-image?: string;
 thumbnail?: string;
 discount: number;
 price: number;

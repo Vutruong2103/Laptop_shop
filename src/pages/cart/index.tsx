@@ -3,14 +3,54 @@ import { IProduct } from "../../components/home-type-products/homeTypeProducts.i
 import { useNavigate } from "react-router-dom";
 import { products } from "../../components/home-type-products/fakeData";
 import { useUserCart } from "../../store/useUserCart";
-import { Modal } from 'antd';
+import { Modal } from "antd";
+import { useUserInfo } from "../../store/useUserInfo";
+import axios from "axios";
+import { showMessage } from "../../utils/showMessage";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const {products} = useUserCart();
+  const { products, setProductCart, setQuantityCart } = useUserCart();
+  const { userInfo } = useUserInfo();
   // const removeItem = (_id: number) => {
   //   setCartItems((items) => items.filter((item) => item._id !== _id));
   // };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productIdSelected, setProductIdSelected] = useState("");
+
+  const onShowModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const onDelete = () => {
+    const payload = {
+      userId: userInfo?.id,
+      productId: productIdSelected,
+    };
+    const url = "https://lapshop-be.onrender.com/api/cart";
+    axios
+      .delete(url, {
+        data: payload,
+      })
+      .then(function (response) {
+        showMessage("success", "Xóa sản thành công!");
+        const totalProducts = response.data?.data?.items?.length;
+        const listItems = response.data?.data?.items;
+        setQuantityCart(totalProducts);
+        setProductCart(listItems);
+        onCancel();
+      })
+      .catch(function (error) {
+        showMessage("error", "Xóa sản phẩm thất bại. Vui lòng thử lại!");
+        onCancel();
+      });
+  };
+
+  const onCancel = () => {
+    setIsModalOpen(false);
+    setProductIdSelected("");
+  };
 
   return (
     <div className="min-h-screen">
@@ -87,13 +127,16 @@ const Cart = () => {
 
                     <div className="flex justify-between">
                       <div
-                        onClick={() => navigate(`/payment/${item._id}`)}
+                        onClick={() => navigate(`/payment/${item.productId}`)}
                         className="py-1 px-2 bg-blue-500 rounded-md cursor-pointer hover:opacity-60"
                       >
                         <p className="text-white font-semibold text-sm">Mua</p>
                       </div>
                       <button
-                        // onClick={() => removeItem(item._id)}
+                        onClick={() => {
+                          onShowModal();
+                          setProductIdSelected(item.productId);
+                        }}
                         className="text-red-600 hover:text-red-800 transition-colors cursor-pointer"
                       >
                         <i className="fas fa-trash mr-1"></i>
@@ -107,6 +150,19 @@ const Cart = () => {
           </div>
         </div>
       </div>
+      <Modal
+        title="Xác nhận"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isModalOpen}
+        onOk={onDelete}
+        onCancel={onCancel}
+        okText="Xóa"
+        cancelText="Hủy"
+        // footer={false}
+      >
+        {/* <h1>XÁC NHẬN</h1> */}
+        <p>Bạn chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng?</p>
+      </Modal>
     </div>
   );
 };

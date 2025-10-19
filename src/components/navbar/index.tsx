@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/imgs/logo.png";
 import { useStore } from "../store";
 import { useUserCart } from "../../store/useUserCart";
+import { Popover } from "antd";
 
 const Navbar = () => {
   const {count} = useStore();
@@ -24,6 +25,21 @@ const Navbar = () => {
     // console.log('thay doi ne');
     setNavSelected(location.pathname)
   }, [location]) // dependencies
+
+  const hanldeLogout = () => {
+    navigate('/login');
+    localStorage.clear();
+  }
+
+  const content = (
+    <div>
+      <p className="font-bold text-center text-purple-500">{userInfo?.name}</p>
+      <button onClick={hanldeLogout} className="mt-4 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
+        Đăng xuất
+      </button>
+    </div>
+  );
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -96,9 +112,11 @@ const Navbar = () => {
               {countQuantityCart}
             </span>
           </button>
+          <Popover content={content}>
           <button onClick={() => navigate("/profile")} className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-user text-xl"></i>
           </button> 
+          </Popover>
           </div>
           ) : (
           <button

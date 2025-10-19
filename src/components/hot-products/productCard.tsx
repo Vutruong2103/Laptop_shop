@@ -18,7 +18,7 @@ const ProductCard = (props: Props) => {
       className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer"
     >
       <div className="relative">
-        <img className="rounded-t-xl" src={item.image} alt="" />
+        <img className="rounded-t-xl" src={item.thumbnail} alt="" />
         {isHot && (
           <div className="absolute top-3 left-3 bg-red-500 rounded text-white px-2 py-1 text-xs font-bold">
             Giảm {item.discount}%

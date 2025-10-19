@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { products } from "../products/fakeData";
+import { useUserInfo } from "../../store/useUserInfo";
+import axios from "axios";
+import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
+import { showMessage } from "../../utils/showMessage";
 
 const Payment = () => {
+  const { userInfo } = useUserInfo();
+  const { state } = useLocation();
+  const { productId } = useParams();
+  const quantity = state.quantity;
+  const [productDetail, setProductDetail] = useState<IProduct>();
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [quantityOrder, setQuantityOrder] = useState(quantity);
+
   const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    address: "",
-    note: "",
+    fullName: userInfo?.name,
+    phone: userInfo?.phone,
+    // email: "",
+    address: userInfo?.address,
+    // note: "",
   });
   const [cardData, setCardData] = useState({
     cardNumber: "",
@@ -33,11 +44,14 @@ const Payment = () => {
       title: "Thanh toán",
     },
   ];
-  const { productId } = useParams();
 
   console.log("Product ID:", productId);
-  const productPayment = products.find((item) => item._id == productId as any)
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const productPayment = products.find(
+    (item) => item._id == (productId as any)
+  );
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target; //e.target là element mà người dùng đang thao tác
     setFormData((prev) => ({
       ...prev,
@@ -53,6 +67,67 @@ const Payment = () => {
     }));
   };
 
+  const getProductDetail = async () => {
+    const url = `https://lapshop-be.onrender.com/api/product/${productId}`;
+    axios
+      .get(url)
+      .then(function (response) {
+        setProductDetail(response.data.product);
+      })
+      .catch(function (error) {
+        console.log("THAT BAI");
+      });
+  };
+
+  const handleOderProduct = () => {
+    const payload = {
+      userId: userInfo?.id,
+      shippingAddress: {
+        name: formData?.fullName,
+        phone: formData.phone,
+        address: formData.address,
+      },
+      products: [
+        {
+          productId: productDetail?._id,
+          name: productDetail?.name,
+          thumbnail: productDetail?.thumbnail,
+          discount: productDetail?.discount,
+          price: productDetail?.price,
+          quantity: quantity,
+          specs: {
+            cpu: productDetail?.specs.cpu,
+            ram: productDetail?.specs.ram,
+            storage: productDetail?.specs.storage,
+            gpu: productDetail?.specs.gpu,
+          },
+        },
+      ],
+    };
+    console.log("payload: ", payload);
+    const url = "https://lapshop-be.onrender.com/api/order";
+    axios
+      .post(url, payload)
+      .then(function (response) {
+        showMessage("success", "Đặt sản phẩm thành công!");
+      })
+      .catch(function (error) {
+        showMessage("error", "Đặt sản phẩm thất bại. Vui lòng thử lại!");
+      });
+  };
+
+  const handleChangeQuantity = (val: string) => {
+    const valNumber = parseInt(val);
+    if (valNumber <= 0) {
+      setQuantityOrder(1);
+    } else {
+      setQuantityOrder(valNumber);
+    }
+  };
+
+  useEffect(() => {
+    getProductDetail();
+  }, [productId]);
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
@@ -101,7 +176,7 @@ const Payment = () => {
                     />
                   </div>
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email
                   </label>
@@ -113,7 +188,7 @@ const Payment = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Nhập email"
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Địa chỉ giao hàng <span className="text-red-500">*</span>
@@ -127,7 +202,7 @@ const Payment = () => {
                     placeholder="Nhập địa chỉ chi tiết"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Ghi chú đơn hàng
                   </label>
@@ -139,7 +214,7 @@ const Payment = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Ghi chú thêm về đơn hàng (tùy chọn)"
                   ></textarea>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -336,20 +411,27 @@ const Payment = () => {
                 <div className="flex space-x-4 pb-4 border-b border-gray-200">
                   <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <img
-                      src="https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=80&height=80&seq=10&orientation=squarish"
-                      alt="ASUS TUF Gaming F15"
+                      src={productDetail?.thumbnail}
+                      alt={productDetail?.name}
                       className="w-full h-full object-cover object-top"
                     />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 text-sm mb-1">
-                      {productPayment?.name}
+                      {productDetail?.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-1">RAM: 8GB</p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      RAM: {productDetail?.specs.ram}
+                    </p>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Số lượng: 1</span>
+                      <input
+                        className="border border-gray-400 w-16 rounded-xl p-2"
+                        type="number"
+                        value={quantityOrder}
+                        onChange={(e) => handleChangeQuantity(e.target.value)}
+                      />
                       <span className="font-medium text-gray-900">
-                        {productPayment?.price}
+                        {[productDetail?.price]}
                       </span>
                     </div>
                   </div>
@@ -360,7 +442,9 @@ const Payment = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Tạm tính:</span>
-                  <span className="text-gray-900">22.990.000₫</span>
+                  <span className="text-gray-900">
+                    {(productDetail?.price as number) * quantityOrder}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Phí vận chuyển:</span>
@@ -378,14 +462,19 @@ const Payment = () => {
                       Tổng cộng:
                     </span>
                     <span className="text-lg font-semibold text-red-600">
-                      {paymentMethod === "cod" ? "23.020.000₫" : "22.990.000₫"}
+                      {/* {paymentMethod === "cod" ? "23.020.000₫" : "22.990.000₫"} */}
+                      {(productDetail?.price as number) * quantityOrder + 30000}
+                      đ
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* Confirm Order Button */}
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button
+                onClick={handleOderProduct}
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+              >
                 <i className="fas fa-check-circle mr-2"></i>
                 Xác nhận đặt hàng
               </button>
