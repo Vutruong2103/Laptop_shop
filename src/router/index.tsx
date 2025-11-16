@@ -10,6 +10,7 @@ import Login from "../pages/login";
 import Register from "../pages/register";
 import AuthLayout from "../components/auth-layout";
 import Profile from "../pages/profile";
+import Order from "../pages/oder";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile/>
+      },
+      {
+        path: '/order/:userId',
+        element: <Order/>
       }
     ],
   },

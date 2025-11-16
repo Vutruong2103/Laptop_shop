@@ -15,6 +15,9 @@ import { products, newestProducts } from "./fakeData";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
 import { ClipLoader } from "react-spinners";
+import { useLocation } from "react-router-dom";
+//cach2
+import { useUserInfo } from "../../store/useUserInfo";
 
 const items = [
   {
@@ -35,6 +38,8 @@ pagination: lưu số trang hiện tại và tổng số sản phẩm.
 */
 
 const Products = () => {
+  const { state } = useLocation();
+  const { brandSelectedStore, setBrandSelectedStore } = useUserInfo();//cach2
   const [priceSorting, setPriceSorting] = useState("newest");
   const [productData, setProductData] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +95,7 @@ const Products = () => {
   };
 
   const getProducts = async () => {
-    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&brand=${state?.brandSelectedStore}`;
     handleFilterProducts(url);
   };
 
@@ -141,8 +146,16 @@ const Products = () => {
 
   //call API lần đầu khi component load
   useEffect(() => {
+    // MOUNTING => luôn gọi đầu tiên khi vào component
     getProducts();
   }, []);
+
+    useEffect(() => {
+    // UNMOUNTING => luôn gọi khi kết thúc component => thoát khỏi component
+    return() => {
+      setBrandSelectedStore("");
+    }
+  }, [])
 
   return (
     <div className="mt-4 max-w-7xl mx-auto">
@@ -183,7 +196,8 @@ const Products = () => {
               <Checkbox.Group
                 className="flex flex-col gap-2"
                 options={brands}
-                defaultValue={[""]}
+                //defaultValue={[state?.brandSelected]} //giá trị mặc định => giá trị ban đầu, state.brandSelected giá trị của brand khi navigate từ home
+                defaultValue={[brandSelectedStore]} // giá trị mặc định => giá trị ban đầu
                 onChange={onChangeBrand}
               />
 
@@ -316,7 +330,7 @@ const Products = () => {
               align="center"
               defaultCurrent={pagination.page}
               total={pagination.total}
-              onChange={(pageNumber) =>handlePagination(pageNumber)} // khi bấm vào trang số mấy thì nó sẽ gọi hàm handlePagination
+              onChange={(pageNumber) => handlePagination(pageNumber)} // khi bấm vào trang số mấy thì nó sẽ gọi hàm handlePagination
             />
           </div>
         </div>
